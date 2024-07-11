@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Recommendation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            position: relative; /* Set position to relative */
+            background-image: url('static/bg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Overlay style */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4); /* Adjust opacity and color as needed */
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            color: #fff;
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .form-container {
+            width: 50%; /* 70% width for the form */
+            position: absolute;
+            left: 70px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1; /* Ensure form is above overlay */
+        }
+
+        form {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            height: 72vh; /* Adjusted height */
+            overflow-y: auto; /* Add scrollbar if content overflows */
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 15px;
+        }
+
+        fieldset {
+            padding: 10px;
+            height: 370px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .number-input {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px; /* Added margin-bottom */
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        legend {
+            font-weight: bold;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px; /* Added margin-bottom */
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input[type="submit"] {
+            grid-column: span 3;
+            width: 100%;
+            padding: 0px; /* Reduced padding */
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px; /* Reduced font size */
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        .result-card {
+            width: 20%; /* 20% width for the result card */
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            position: absolute;
+            right: 70px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1; /* Ensure card is above overlay */
+            display: none; /* Hide by default */
+        }
+
+        .result-card.show {
+            display: block; /* Show when class is applied */
+        }
+        .result-card strong{
+            color: rgb(7, 71, 145);
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <form action="/predict" method="post">
+            <fieldset>
+                <legend><h3>Soil Composition</h3></legend>
+                <label for="N">Nitrogen:</label>
+                <input class="number-input" type="number" id="N" name="N">
+                
+                <label for="P">Phosphorus:</label>
+                <input class="number-input" type="number" id="P" name="P">
+                
+                <label for="K">Potassium:</label>
+                <input class="number-input" type="number" id="K" name="K">
+            </fieldset>
+            
+            <fieldset>
+                <legend><h3>Environmental Factors</h3></legend>
+                <label for="temperature">Temperature (in degrees):</label>
+                <input class="number-input" type="number" id="temperature" name="temperature" max="100">
+                
+                <label for="humidity">Humidity:</label>
+                <input class="number-input" type="number" id="humidity" name="humidity">
+                
+                <label for="ph">pH:</label>
+                <input class="number-input" type="number" id="ph" name="ph" max="14">
+                
+                <label for="rainfall">Rainfall (in mm):</label>
+                <input class="number-input" type="number" id="rainfall" name="rainfall">
+                
+            </fieldset>
+
+                     
+            <input type="submit" value="Predict">
+        </form>
+    </div>
+    
+    <div class="result-card">
+        <h3><center>Recommended Crop</center></h3>
+        <center><strong><div id="recommended-crop-result" ></div></strong></center>
+        </div>
+    </div>
+    
+    <script>
+        // Mocking a prediction result
+        var recommendedCrop = "{{ recommended_crop }}";
+        // Update the result card content with the prediction result
+        document.getElementById("recommended-crop-result").innerText = recommendedCrop;
+
+        // Show the result card
+        document.querySelector(".result-card").classList.add("show");
+    </script>
+</body>
+</html>
